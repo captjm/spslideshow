@@ -1,0 +1,40 @@
+{
+  "name": "@captjm/spslideshow",
+  "version": "1.0.0",
+  "description": "Slideshow and CKEditor plugin for SPECTRUM website",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm run build",
+    "start": "serve ./dist",
+    "build": "webpack --mode production",
+    "watch": "webpack --watch --mode development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/captjm/spslideshow.git"
+  },
+  "keywords": [
+    "CKEditor4"
+  ],
+  "author": "David Makaridze",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/captjm/spslideshow/issues"
+  },
+  "homepage": "https://github.com/captjm/spslideshow#readme",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "ckeditor4": "^4.20.1",
+    "@babel/core": "^7.17.5",
+    "@babel/preset-env": "^7.16.11",
+    "babel-loader": "^8.2.3",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^6.0.3",
+    "core-js": "^3.21.1",
+    "serve": "^13.0.2",
+    "terser-webpack-plugin": "^3.0.7"
+  }
+}

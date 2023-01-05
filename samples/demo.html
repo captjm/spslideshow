@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        .sp-slide-show-wrapper {
+            width: 100vw;
+            overflow-x: hidden;
+            position: relative;
+        }
+        .sp-slide-show-nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+        .sp-slide-show-nav .sp-btn {
+            width: 5vw;
+            height: 5vw;
+            background-color: aquamarine;
+            pointer-events: all;
+        }
+        .sp-slide-show-nav .sp-prev {
+
+        }
+        .sp-slide-show-nav .sp-next {
+
+        }
+        .sp-slide-show {
+            height: 80vh;
+            display: flex;
+            transform: translateX(0);
+            transition: transform .5s ease-out;
+        }
+        .sp-slide {
+            height: 100%;
+        }
+
+        .sp-slide img {
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="sp-slide-show-wrapper">
+    <div class="sp-slide-show">
+        <div class="sp-slide"><img src="p1.jpeg" alt=""/></div>
+        <div class="sp-slide"><img src="p2.jpg" alt=""/></div>
+        <div class="sp-slide"><img src="p3.jpeg" alt=""/></div>
+        <div class="sp-slide"><img src="p1.jpeg" alt=""/></div>
+        <div class="sp-slide"><img src="p2.jpg" alt=""/></div>
+        <div class="sp-slide"><img src="p3.jpeg" alt=""/></div>
+    </div>
+    <div class="sp-slide-show-nav">
+        <div class="sp-btn sp-prev"></div>
+        <div class="sp-btn sp-next"></div>
+    </div>
+</div>
+<script>
+    class Slide {
+        _el;
+        _width;
+        _x;
+        _parent;
+        _index;
+
+        get x() {
+            return this._x;
+        }
+
+        set x(value) {
+            this._x = value;
+        }
+
+        constructor(index, el, parent) {
+            this._index = index;
+            this._el = el;
+            this._parent = parent;
+            this._width = el.clientWidth;
+            this._el.onclick = () => parent.slideTo(this._index);
+        }
+
+        get el() {
+            return this._el;
+        }
+
+        get width() {
+            return this._width;
+        }
+    }
+    class SPSlideShow {
+        _el;
+        _slides;
+        _x = 0;
+        _current;
+        _prevBtn;
+        _nextBtn;
+        constructor(selector) {
+            this._el = document.querySelector(selector);
+            this._slides = Array.from(this._el.querySelectorAll(".sp-slide")).map((el, index) => new Slide(index, el, this));
+            const w = this._slides.reduce((total, slide) => total + slide.width, 0);
+            const minX = window.innerWidth - w;
+            console.log(minX);
+            let x = 0;
+            this._slides[0].x = x;
+            x = (window.innerWidth - this._slides[0].width)/2;
+            for (let i = 1; i<this._slides.length; i++) {
+                x = x - (this._slides[i-1].width + this._slides[i].width) / 2;
+                if (x < minX) x = minX;
+                console.log(x);
+                if (x > 0) x = 0;
+                this._slides[i].x = x;
+            }
+            this._current = 0;
+            this._el.style.transform = `translateX(${this._slides[0].x}px)`;
+            this._prevBtn = this._el.parentNode.querySelector(".sp-prev");
+            this._nextBtn = this._el.parentNode.querySelector(".sp-next");
+            this._prevBtn.onclick = () => {
+                this.slide("left");
+            };
+            this._nextBtn.onclick = () => {
+                this.slide("right");
+            };
+        }
+
+        update() {
+
+            return this;
+        }
+
+        slide(dir) {
+            if (dir === "left") {
+                if (this._current > 0) {
+                    this._current --;
+                    this._el.style.transform = `translateX(${this._slides[this._current].x}px)`;
+                }
+            } else if (dir === "right") {
+                if (this._current < this._slides.length - 1) {
+                    this._current ++;
+                    this._el.style.transform = `translateX(${this._slides[this._current].x}px)`;
+                }
+            }
+        }
+
+        slideTo(index) {
+            this._el.style.transform = `translateX(${this._slides[index].x}px)`;
+        }
+    }
+
+
+    document.addEventListener("readystatechange", () => {
+        if (document.readyState === "complete") window.slideShow = new SPSlideShow(".sp-slide-show").update();
+    });
+
+</script>
+</body>
+</html>
